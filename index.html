@@ -3,216 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manit Ruparel | Portfolio</title>
+    <title>Manit Ruparel | Digital Architect</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Syne:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #050505;
-            --neon-cyan: #00f0ff;
-            --neon-purple: #8a2be2;
-            --neon-pink: #ff007f;
-            --glass-bg: rgba(25, 25, 35, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-main: #ffffff;
-            --text-muted: #a0a0a0;
+            --bg-base: #030305;
+            --accent-1: #FF3366;
+            --accent-2: #20E3B2;
+            --accent-3: #00F0FF;
+            --text-main: #FFFFFF;
+            --text-dim: #8892B0;
+            --glass: rgba(10, 10, 15, 0.6);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         
-        body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; line-height: 1.6; }
-
-        /* Cinematic Animated Background */
-        .ambient-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: var(--bg-dark); }
-        .blob { position: absolute; filter: blur(90px); border-radius: 50%; animation: float 20s infinite alternate ease-in-out; opacity: 0.5; }
-        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--neon-purple), transparent 70%); animation-delay: 0s; }
-        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, var(--neon-cyan), transparent 70%); animation-delay: -5s; }
-        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: radial-gradient(circle, var(--neon-pink), transparent 70%); animation-delay: -10s; opacity: 0.3; }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(100px, 150px) scale(1.2); }
+        body { 
+            background-color: var(--bg-base); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            line-height: 1.6;
         }
 
-        /* Glassmorphism Utilities */
-        .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
+        /* Custom JS Cursor */
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent-2); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--accent-2); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        
+        /* Animated Fluid Background */
+        .mesh-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(255, 51, 102, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(32, 227, 178, 0.08), transparent 25%);
+            filter: blur(60px);
+            animation: breathe 15s infinite alternate ease-in-out;
         }
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+        .section-title { 
+            font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; margin-bottom: 60px; 
+            text-transform: uppercase; letter-spacing: -1px;
+            background: linear-gradient(90deg, var(--text-main), var(--text-dim));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 25px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 1000;
+        }
+        .logo { font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 2px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-family: 'Syncopate', sans-serif; font-size: 0.8rem; letter-spacing: 1px; transition: 0.3s; padding: 10px 20px; border: 1px solid transparent; border-radius: 30px; }
+        .nav-links a:hover { border-color: var(--accent-2); color: var(--accent-2); }
 
         /* Hero Section */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; position: relative; }
-        .hero-tag { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); padding: 8px 16px; border-radius: 50px; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px; border: 1px solid rgba(0, 240, 255, 0.2); }
-        .hero h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 1; margin-bottom: 20px; letter-spacing: -2px; text-transform: uppercase; }
-        .hero h1 span { background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--text-muted); max-width: 700px; margin-bottom: 40px; font-weight: 300; }
-
-        /* Social / Contact Links */
-        .link-hub { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .btn-link {
-            display: flex; align-items: center; gap: 10px; padding: 15px 30px; border-radius: 12px; text-decoration: none;
-            font-weight: 700; font-size: 16px; transition: 0.3s; position: relative; overflow: hidden;
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 10%; position: relative; }
+        .hero-subtitle { font-family: 'Syncopate', sans-serif; color: var(--accent-2); letter-spacing: 4px; font-size: 0.9rem; margin-bottom: 20px; display: block; }
+        .hero h1 { font-size: clamp(4rem, 10vw, 8rem); line-height: 0.9; margin-bottom: 30px; text-transform: uppercase; letter-spacing: -3px; }
+        .hero p { font-size: clamp(1.1rem, 2vw, 1.4rem); color: var(--text-dim); max-width: 600px; margin-bottom: 50px; }
+        
+        /* Action Buttons */
+        .btn-group { display: flex; gap: 20px; flex-wrap: wrap; }
+        .btn {
+            padding: 18px 40px; border-radius: 4px; font-family: 'Syncopate', sans-serif; font-size: 0.8rem; font-weight: 700;
+            letter-spacing: 2px; text-decoration: none; text-transform: uppercase; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative; overflow: hidden; z-index: 1; display: inline-flex; align-items: center; gap: 10px;
         }
-        .btn-linkedin { background: #0077b5; color: white; border: 1px solid #0077b5; }
-        .btn-linkedin:hover { box-shadow: 0 0 25px rgba(0, 119, 181, 0.5); transform: translateY(-3px); }
-        .btn-email { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
-        .btn-email:hover { background: rgba(255,255,255,0.1); border-color: white; transform: translateY(-3px); }
+        .btn-primary { background: var(--text-main); color: var(--bg-base); }
+        .btn-primary:hover { background: var(--accent-2); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(32, 227, 178, 0.3); }
+        .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--text-main); transform: translateY(-5px); }
+
+        /* Infinite Ticker Tape */
+        .ticker-wrap { width: 100%; overflow: hidden; background: var(--accent-1); padding: 15px 0; transform: rotate(-2deg) scale(1.1); margin: 100px 0; z-index: 10; position: relative; }
+        .ticker { display: flex; width: max-content; animation: ticker 25s linear infinite; }
+        .ticker-item { font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--bg-base); padding: 0 40px; text-transform: uppercase; letter-spacing: 2px; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
         /* Layout Container */
-        .container { max-width: 1200px; margin: 0 auto; padding: 100px 5%; }
-        .section-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 50px; display: flex; align-items: center; gap: 15px; }
-        .section-title i { color: var(--neon-cyan); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 100px 5%; }
 
-        /* Experience Matrix (Custom Timeline) */
-        .experience-grid { display: flex; flex-direction: column; gap: 30px; }
-        
-        .xp-card {
-            padding: 40px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; gap: 15px; border-left: 4px solid transparent;
+        /* Massive Timeline / Evolution Section */
+        .evolution-grid { display: grid; gap: 80px; position: relative; }
+        .evolution-grid::before {
+            content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--accent-2), var(--accent-3), var(--accent-1), transparent);
         }
-        @media(min-width: 768px) { .xp-card { flex-direction: row; align-items: center; gap: 40px; } }
-        
-        .xp-card:hover { transform: translateX(10px); border-left-color: var(--neon-cyan); background: rgba(25, 25, 35, 0.7); }
-        
-        .xp-date { font-weight: 700; color: var(--neon-purple); font-size: 18px; min-width: 160px; font-variant-numeric: tabular-nums; }
-        .xp-content { flex-grow: 1; }
-        .xp-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
-        .xp-org { font-size: 16px; color: var(--neon-cyan); font-weight: 500; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .xp-desc { color: var(--text-muted); font-size: 15px; line-height: 1.7; }
 
-        /* Tech & Skills Grid */
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
-        .skill-box { padding: 25px 20px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .skill-box:hover { transform: translateY(-5px); border-color: var(--neon-pink); box-shadow: 0 10px 30px rgba(255, 0, 127, 0.1); }
-        .skill-box i { font-size: 32px; color: var(--text-main); transition: 0.3s; }
-        .skill-box:hover i { color: var(--neon-pink); }
-        .skill-box span { font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        .evo-node { display: grid; grid-template-columns: 1fr; gap: 30px; position: relative; padding-left: 60px; }
+        @media(min-width: 900px) {
+            .evo-node { grid-template-columns: 350px 1fr; padding-left: 80px; }
+        }
 
-        /* Scroll Animations */
-        .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* Timeline Dot */
+        .evo-node::before {
+            content: ''; position: absolute; left: 16px; top: 10px; width: 9px; height: 9px;
+            background: var(--bg-base); border: 2px solid var(--text-main); border-radius: 50%;
+            transition: 0.5s; box-shadow: 0 0 0 4px var(--bg-base); z-index: 2;
+        }
+        .evo-node:hover::before { background: var(--accent-2); border-color: var(--accent-2); transform: scale(1.5); box-shadow: 0 0 20px var(--accent-2); }
+
+        .evo-meta { position: relative; }
+        .evo-date { font-family: 'Syncopate', sans-serif; font-size: 0.8rem; color: var(--accent-2); letter-spacing: 2px; margin-bottom: 15px; display: block; }
+        .evo-role { font-size: 2rem; font-family: 'Syne', sans-serif; font-weight: 800; line-height: 1.1; margin-bottom: 10px; }
+        .evo-org { display: inline-block; padding: 6px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 30px; font-size: 0.8rem; letter-spacing: 1px; color: var(--text-dim); text-transform: uppercase; }
+
+        .evo-content { background: var(--glass); padding: 40px; border-radius: 12px; border: 1px solid var(--border); transition: 0.4s; }
+        .evo-content:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-5px); }
+        .evo-content p { font-size: 1.05rem; color: var(--text-dim); margin-bottom: 25px; line-height: 1.8; }
+        
+        .impact-list { list-style: none; display: grid; gap: 15px; }
+        .impact-list li { display: flex; align-items: flex-start; gap: 15px; font-size: 0.95rem; color: #D1D5DB; }
+        .impact-list i { color: var(--accent-3); margin-top: 5px; font-size: 0.8rem; }
+
+        /* Capability Matrix (Skills) */
+        .matrix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .matrix-card { background: var(--glass); border: 1px solid var(--border); padding: 40px; border-radius: 12px; transition: 0.4s; }
+        .matrix-card:hover { background: rgba(255,255,255,0.03); border-color: var(--accent-3); }
+        .matrix-icon { font-size: 2.5rem; color: var(--accent-3); margin-bottom: 25px; }
+        .matrix-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .matrix-card p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.7; }
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tag { background: rgba(255,255,255,0.05); color: var(--text-main); font-size: 0.75rem; padding: 6px 14px; border-radius: 4px; font-family: 'Syncopate', sans-serif; letter-spacing: 1px; }
+
+        /* Scroll Animation Classes */
+        .reveal-up { opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .reveal-up.active { opacity: 1; transform: translateY(0); }
+
+        /* Contact Section */
+        .contact-section { text-align: center; padding: 150px 5%; border-top: 1px solid var(--border); background: linear-gradient(to top, rgba(32, 227, 178, 0.05), transparent); }
+        .contact-section h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 40px; }
+        
+        @media(max-width: 768px) {
+            .evo-node { padding-left: 40px; }
+            .evolution-grid::before { left: 10px; }
+            .evo-node::before { left: 6px; }
+            .ticker-wrap { transform: rotate(-5deg) scale(1.1); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Background -->
-    <div class="ambient-bg">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
+    <!-- Custom Mouse Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Fluid Background -->
+    <div class="mesh-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">MANIT.</div>
+        <div class="nav-links">
+            <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank">LINKEDIN</a>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-tag reveal">Architecting Digital Spaces</div>
-        <h1 class="reveal">Manit <span>Ruparel</span></h1>
-        <p class="reveal">Scaling communities to half a million users. Editing high-retention content for top-tier creators. Building custom web infrastructure from the ground up.</p>
-        
-        <div class="link-hub reveal">
-            <!-- Your Exact Links -->
-            <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="btn-link btn-linkedin">
-                <i class="fa-brands fa-linkedin-in"></i> Connect on LinkedIn
-            </a>
-            <a href="mailto:manitruparell@gmail.com" class="btn-link btn-email">
-                <i class="fa-solid fa-envelope"></i> manitruparell@gmail.com
-            </a>
+        <div class="reveal-up">
+            <span class="hero-subtitle">Operational Architect & Editor</span>
+            <h1>Digital<br>Scale.</h1>
+            <p>Directing engagement for 400,000+ member ecosystems. Engineering high-retention content for top-tier creators. Building the infrastructure that powers community growth.</p>
+            <div class="btn-group">
+                <a href="#evolution" class="btn btn-primary">View Trajectory <i class="fa-solid fa-arrow-down"></i></a>
+                <a href="mailto:manitruparell@gmail.com" class="btn btn-secondary"><i class="fa-solid fa-envelope"></i> Contact</a>
+            </div>
         </div>
     </section>
 
-    <!-- Experience Matrix -->
-    <section class="container">
-        <h2 class="section-title reveal"><i class="fa-solid fa-timeline"></i> Operational Matrix</h2>
+    <!-- Infinite Skill Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">Event Management</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Video Editing</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Community Architecture</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Web Development</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Algorithm Optimization</div>
+            <div class="ticker-item">•</div>
+            <!-- Duplicated for seamless loop -->
+            <div class="ticker-item">Event Management</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Video Editing</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Community Architecture</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Web Development</div>
+            <div class="ticker-item">•</div>
+            <div class="ticker-item">Algorithm Optimization</div>
+        </div>
+    </div>
+
+    <!-- The Evolution (Timeline) -->
+    <section id="evolution" class="container">
+        <h2 class="section-title reveal-up">The Trajectory</h2>
         
-        <div class="experience-grid">
+        <div class="evolution-grid">
             
-            <!-- 2025 - Current -->
-            <div class="xp-card glass-panel reveal" data-tilt data-tilt-max="2" data-tilt-speed="400">
-                <div class="xp-date">2025 - Present</div>
-                <div class="xp-content">
-                    <div class="xp-title">Server Head & Event Manager</div>
-                    <div class="xp-org"><i class="fa-brands fa-discord"></i> 400,000+ Member Community</div>
-                    <div class="xp-desc">Directing top-level server operations, executing massive community events, and managing moderation infrastructure for a scale of nearly half a million active users.</div>
+            <!-- Current Role: 400k -->
+            <div class="evo-node reveal-up">
+                <div class="evo-meta">
+                    <span class="evo-date">2025 — PRESENT</span>
+                    <h3 class="evo-role">Server Head &<br>Event Director</h3>
+                    <div class="evo-org">400k+ Member Community</div>
+                </div>
+                <div class="evo-content">
+                    <p>Executing executive-level leadership over a massive, hyper-active digital ecosystem. Responsible for total operational health, user retention, and live event mechanics for nearly half a million concurrent members.</p>
+                    <ul class="impact-list">
+                        <li><i class="fa-solid fa-angle-right"></i> Directing cross-functional moderation and event staff to ensure flawless execution of large-scale community initiatives.</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Engineering custom internal dashboards and infrastructure to streamline ticket handling and staff workflows.</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Designing crisis management protocols to maintain platform safety during massive traffic spikes.</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- March - July 2026 -->
-            <div class="xp-card glass-panel reveal" data-tilt data-tilt-max="2" data-tilt-speed="400">
-                <div class="xp-date">Mar '26 - Jul '26</div>
-                <div class="xp-content">
-                    <div class="xp-title">Video Editor</div>
-                    <div class="xp-org"><i class="fa-solid fa-video"></i> iFerg (Creator Team)</div>
-                    <div class="xp-desc">Executed high-retention video editing and pacing strategies for one of the largest mobile gaming creators in the world. Optimized content for maximum audience engagement and algorithm performance.</div>
+            <!-- iFerg Role -->
+            <div class="evo-node reveal-up">
+                <div class="evo-meta">
+                    <span class="evo-date">MAR 2026 — JUL 2026</span>
+                    <h3 class="evo-role">Professional<br>Video Editor</h3>
+                    <div class="evo-org">iFerg (Creator Team)</div>
+                </div>
+                <div class="evo-content">
+                    <p>Recruited to execute high-retention post-production for one of the largest mobile gaming creators globally. Translated raw gameplay and A-roll into highly optimized, algorithm-friendly content.</p>
+                    <ul class="impact-list">
+                        <li><i class="fa-solid fa-angle-right"></i> Implemented advanced pacing, motion graphics, and audio mixing to maximize audience retention graphs.</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Adapted editing style to match established brand guidelines while innovating visual hooks for the first crucial 30 seconds.</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- 2024 - 2025 -->
-            <div class="xp-card glass-panel reveal" data-tilt data-tilt-max="2" data-tilt-speed="400">
-                <div class="xp-date">2024 - 2025</div>
-                <div class="xp-content">
-                    <div class="xp-title">Event Manager</div>
-                    <div class="xp-org"><i class="fa-solid fa-users"></i> 200,000 Member Community</div>
-                    <div class="xp-desc">Designed, scheduled, and hosted live digital events. Scaled engagement metrics and managed real-time community coordination across a rapidly growing user base.</div>
+            <!-- 200k Role -->
+            <div class="evo-node reveal-up">
+                <div class="evo-meta">
+                    <span class="evo-date">2024 — 2025</span>
+                    <h3 class="evo-role">Event<br>Manager</h3>
+                    <div class="evo-org">200k Member Community</div>
+                </div>
+                <div class="evo-content">
+                    <p>Spearheaded the live interaction strategy that rapidly scaled the community from foundational numbers to mass adoption. Designed the mechanics that kept tens of thousands of users engaged weekly.</p>
+                    <ul class="impact-list">
+                        <li><i class="fa-solid fa-angle-right"></i> Conceptualized, scheduled, and hosted digital tournaments, AMAs, and interactive stage events.</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Analyzed post-event metrics to optimize future scheduling and increase concurrent active voice-channel participation.</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- 2022 - 2024 -->
-            <div class="xp-card glass-panel reveal" data-tilt data-tilt-max="2" data-tilt-speed="400">
-                <div class="xp-date">2022 - 2024</div>
-                <div class="xp-content">
-                    <div class="xp-title">Server Manager</div>
-                    <div class="xp-org"><i class="fa-solid fa-server"></i> 50,000 Member Community</div>
-                    <div class="xp-desc">Laid the foundational architecture for community guidelines, staff hierarchies, and user retention, successfully establishing the server as a premier digital hub.</div>
+            <!-- 50k Role -->
+            <div class="evo-node reveal-up">
+                <div class="evo-meta">
+                    <span class="evo-date">2022 — 2024</span>
+                    <h3 class="evo-role">Server<br>Manager</h3>
+                    <div class="evo-org">50k Member Community</div>
+                </div>
+                <div class="evo-content">
+                    <p>Laid the critical groundwork for server hierarchy and rule sets. Transitioned the community from a niche group into a structured, highly moderated digital space capable of aggressive scaling.</p>
+                    <ul class="impact-list">
+                        <li><i class="fa-solid fa-angle-right"></i> Built the initial staff onboarding pipelines and automated bot defense systems.</li>
+                        <li><i class="fa-solid fa-angle-right"></i> Fostered core community culture, resulting in the massive word-of-mouth growth that defined the following years.</li>
+                    </ul>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Skills & Infrastructure ("And More") -->
-    <section class="container" style="padding-top: 0;">
-        <h2 class="section-title reveal"><i class="fa-solid fa-microchip"></i> System Stack & Projects</h2>
+    <!-- Capability Matrix -->
+    <section class="container">
+        <h2 class="section-title reveal-up">Capability Matrix</h2>
         
-        <div class="skills-grid">
-            <div class="skill-box glass-panel reveal">
-                <i class="fa-solid fa-scissors"></i>
-                <span>Pro Editing</span>
+        <div class="matrix-grid">
+            
+            <div class="matrix-card reveal-up">
+                <i class="fa-solid fa-globe matrix-icon"></i>
+                <h3>Community Architecture</h3>
+                <p>Scaling digital spaces requires more than just moderation; it requires engineered economies, retention loops, and hierarchal leadership.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Discord Operations</span>
+                    <span class="tech-tag">Crisis Management</span>
+                    <span class="tech-tag">Live Event Routing</span>
+                </div>
             </div>
-            <div class="skill-box glass-panel reveal" style="transition-delay: 0.1s;">
-                <i class="fa-brands fa-html5"></i>
-                <span>Web Dev</span>
+
+            <div class="matrix-card reveal-up" style="transition-delay: 0.1s;">
+                <i class="fa-solid fa-photo-film matrix-icon"></i>
+                <h3>Content & Retention</h3>
+                <p>Understanding the algorithm is science; hooking the viewer is art. Delivering A-tier post-production tailored for YouTube's metrics.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Video Editing</span>
+                    <span class="tech-tag">Pacing & Hooks</span>
+                    <span class="tech-tag">Audience Retention</span>
+                </div>
             </div>
-            <div class="skill-box glass-panel reveal" style="transition-delay: 0.2s;">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>TrendTrade UI</span>
+
+            <div class="matrix-card reveal-up" style="transition-delay: 0.2s;">
+                <i class="fa-solid fa-code matrix-icon"></i>
+                <h3>Web Infrastructure</h3>
+                <p>Building client-side applications, business tools (TrendTrade), and custom dashboards to solve operational bottlenecks without heavy backend costs.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">HTML5 / CSS3</span>
+                    <span class="tech-tag">JavaScript ES6</span>
+                    <span class="tech-tag">GitHub Deployments</span>
+                </div>
             </div>
-            <div class="skill-box glass-panel reveal" style="transition-delay: 0.3s;">
-                <i class="fa-solid fa-ticket"></i>
-                <span>Custom Dashboards</span>
-            </div>
-            <div class="skill-box glass-panel reveal" style="transition-delay: 0.4s;">
-                <i class="fa-solid fa-users-gear"></i>
-                <span>Staff Leadership</span>
+
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="reveal-up">
+            <h2>Let's Build.</h2>
+            <div class="btn-group" style="justify-content: center;">
+                <a href="mailto:manitruparell@gmail.com" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> manitruparell@gmail.com</a>
+                <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="btn btn-secondary"><i class="fa-brands fa-linkedin"></i> LinkedIn Profile</a>
             </div>
         </div>
     </section>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <script>
-        // Scroll Reveal Logic
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                if (elementTop < windowHeight - 50) {
-                    reveals[i].classList.add("active");
-                }
-            }
-        }
-        window.addEventListener("scroll", reveal);
-        // Trigger immediately on load
-        setTimeout(reveal, 100);
-    </script>
-</body>
-</html>
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            
