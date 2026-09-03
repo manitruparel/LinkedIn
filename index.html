@@ -72,9 +72,8 @@
         .nav-links a { color: var(--text-main); text-decoration: none; font-family: 'Syncopate', sans-serif; font-size: 0.7rem; letter-spacing: 1px; transition: 0.3s; padding: 8px 15px; border: 1px solid transparent; border-radius: 30px; }
         .nav-links a:hover { border-color: var(--accent-2); color: var(--accent-2); }
 
-        /* Hero Section - Uses Pure CSS Animation for Mobile Reliability */
+        /* Hero Section - Pure CSS Animation */
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 5% 50px; position: relative; }
-        
         .hero-animate { animation: heroLoad 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; opacity: 0; transform: translateY(30px); }
         @keyframes heroLoad { to { opacity: 1; transform: translateY(0); } }
 
@@ -153,9 +152,13 @@
         .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; }
         .tech-tag { background: rgba(255,255,255,0.08); color: var(--text-main); font-size: 0.7rem; padding: 5px 12px; border-radius: 4px; font-family: 'Syncopate', sans-serif; letter-spacing: 1px; }
 
-        /* Scroll Animation Classes - JS Handled */
-        .reveal-up { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .reveal-up.active { opacity: 1; transform: translateY(0); }
+        /* Scroll Animation Classes - Mobile Bulletproof Fix */
+        .reveal-up { transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        
+        @media (min-width: 768px) {
+            .reveal-up { opacity: 0; transform: translateY(40px); }
+            .reveal-up.active { opacity: 1; transform: translateY(0); }
+        }
 
         /* Contact Section */
         .contact-section { text-align: center; padding: 100px 5%; border-top: 1px solid var(--border); background: linear-gradient(to top, rgba(32, 227, 178, 0.05), transparent); }
@@ -205,7 +208,6 @@
             <div class="ticker-item">•</div>
             <div class="ticker-item">Algorithm Optimization</div>
             <div class="ticker-item">•</div>
-            <!-- Duplicated for seamless loop -->
             <div class="ticker-item">Event Management</div>
             <div class="ticker-item">•</div>
             <div class="ticker-item">Video Editing</div>
@@ -224,7 +226,6 @@
         
         <div class="evolution-grid">
             
-            <!-- Current Role: 400k -->
             <div class="evo-node reveal-up">
                 <div class="evo-meta">
                     <span class="evo-date">2025 — PRESENT</span>
@@ -241,7 +242,6 @@
                 </div>
             </div>
 
-            <!-- iFerg Role -->
             <div class="evo-node reveal-up">
                 <div class="evo-meta">
                     <span class="evo-date">MAR 2026 — JUL 2026</span>
@@ -257,7 +257,6 @@
                 </div>
             </div>
 
-            <!-- 200k Role -->
             <div class="evo-node reveal-up">
                 <div class="evo-meta">
                     <span class="evo-date">2024 — 2025</span>
@@ -273,7 +272,6 @@
                 </div>
             </div>
 
-            <!-- 50k Role -->
             <div class="evo-node reveal-up">
                 <div class="evo-meta">
                     <span class="evo-date">2022 — 2024</span>
@@ -334,10 +332,70 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <   !-- Contact Section -->
     <section class="contact-section">
         <div class="reveal-up">
             <h2>Let's Build.</h2>
             <div class="btn-group" style="justify-content: center;">
                 <a href="mailto:manitruparell@gmail.com" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> manitruparell@gmail.com</a>
-                <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="
+                <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="btn btn-secondary"><i class="fa-brands fa-linkedin"></i> LinkedIn Profile</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor Logic - Only executes if on a device with a fine pointer (mouse)
+        if (window.matchMedia("(pointer: fine)").matches) {
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 150, fill: "forwards" });
+            });
+
+            const interactables = document.querySelectorAll('a, .btn, .evo-content, .matrix-card');
+            interactables.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.style.width = '60px';
+                    cursorOutline.style.height = '60px';
+                    cursorOutline.style.backgroundColor = 'rgba(32, 227, 178, 0.1)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.style.width = '40px';
+                    cursorOutline.style.height = '40px';
+                    cursorOutline.style.backgroundColor = 'transparent';
+                });
+            });
+
+            // Desktop Scroll Reveals
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-up').forEach(el => {
+                observer.observe(el);
+            });
+        }
+    </script>
+</body>
+</html>
