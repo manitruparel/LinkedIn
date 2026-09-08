@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Manit Ruparel | Digital Operations</title>
-    <!-- Professional Favicon Requirement -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --text-main: #0F172A;
@@ -35,78 +34,118 @@
 
         /* Persistent HUD */
         .hud-panel {
-            position: fixed; top: 25px; left: 25px; z-index: 100;
+            position: fixed; top: 100px; left: 25px; z-index: 100;
             display: none; flex-direction: column; gap: 15px; pointer-events: none;
         }
-        @media (min-width: 1100px) { .hud-panel { display: flex; } }
+        @media (min-width: 1200px) { .hud-panel { display: flex; } }
         
         .hud-item {
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,1); padding: 12px 20px; border-radius: 8px; /* No pill shapes */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,1); padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 180px;
         }
-        .hud-item span { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 3px; }
-        .hud-item strong { font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--text-main); }
+        .hud-item span { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 800; margin-bottom: 5px; }
+        .hud-item strong { font-family: 'Space Grotesk', sans-serif; font-size: 15px; color: var(--text-main); line-height: 1.2; display: block;}
 
+        /* Top Navigation with Custom Avatar */
         nav {
-            position: fixed; top: 0; right: 0; width: 100%; padding: 20px 5%; 
-            display: flex; justify-content: flex-end; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 5%; 
+            display: flex; justify-content: space-between; align-items: center;
             z-index: 100; pointer-events: none;
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9), transparent);
         }
         
-        .contact-btn { 
-            background: var(--text-main); color: #ffffff; padding: 12px 24px; border-radius: 8px; /* Strict 8px border */
-            text-decoration: none; font-weight: 700; font-size: 14px; transition: 0.2s; pointer-events: auto;
+        .nav-brand {
+            display: flex; align-items: center; gap: 12px; pointer-events: auto;
         }
-        .contact-btn:hover { background: var(--primary); transform: translateY(-2px); }
+        
+        .nav-avatar {
+            width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid #ffffff;
+        }
+
+        .nav-name {
+            font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+        @media (max-width: 400px) { .nav-name { display: none; } }
+
+        .contact-btn { 
+            background: var(--text-main); color: #ffffff; padding: 14px 28px; border-radius: 8px;
+            text-decoration: none; font-weight: 700; font-size: 14px; transition: 0.2s; pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2);
+        }
+        .contact-btn:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3); }
 
         .ui-layer { position: relative; z-index: 10; width: 100%; }
 
-        /* Tighter Scroll Sections */
+        /* === UNIQUE HERO SECTION === */
+        .hero-section {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 120px 5% 60px; position: relative; pointer-events: none;
+        }
+        
+        .hero-content {
+            max-width: 900px; pointer-events: auto;
+        }
+
+        .hero-title { 
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(3.5rem, 8vw, 6.5rem); 
+            font-weight: 700; line-height: 1; margin-bottom: 30px; letter-spacing: -2px; color: var(--text-main); 
+        }
+        .hero-title span { color: var(--primary); }
+
+        .hero-desc { 
+            font-size: clamp(1.1rem, 3vw, 1.3rem); color: var(--text-muted); line-height: 1.8; 
+            font-weight: 500; margin-bottom: 40px; max-width: 750px;
+        }
+
+        /* === TIMELINE SECTIONS === */
         .section {
-            min-height: 80vh; display: flex; flex-direction: column; justify-content: center;
+            min-height: 85vh; display: flex; flex-direction: column; justify-content: center;
             padding: 80px 5%; position: relative; pointer-events: none;
         }
 
         .glass-block {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 1);
-            border-radius: 12px; padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            max-width: 750px; pointer-events: auto; transition: 0.3s;
+            border-radius: 12px; padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            max-width: 850px; pointer-events: auto; transition: 0.3s;
         }
-        .glass-block:hover { border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 15px 40px rgba(37, 99, 235, 0.1); }
+        .glass-block:hover { border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 20px 50px rgba(37, 99, 235, 0.1); }
+        @media (max-width: 600px) { .glass-block { padding: 30px 20px; } }
 
         .align-right { align-items: flex-end; }
         
         .year-tag {
-            font-size: 12px; color: var(--primary); font-weight: 800; letter-spacing: 1px;
-            margin-bottom: 15px; display: inline-block; background: rgba(37, 99, 235, 0.1);
-            padding: 6px 12px; border-radius: 6px; text-transform: uppercase;
+            font-size: 13px; color: var(--primary); font-weight: 800; letter-spacing: 1.5px;
+            margin-bottom: 20px; display: inline-block; background: rgba(37, 99, 235, 0.1);
+            padding: 8px 16px; border-radius: 6px; text-transform: uppercase;
         }
 
-        .massive-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; color: var(--text-main); }
-        .massive-title span { color: var(--primary); }
+        .card-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 25px; letter-spacing: -1px; color: var(--text-main); }
+        
+        /* Expanded Text Blocks */
+        .detailed-text { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; font-weight: 500; margin-bottom: 20px; }
+        .detailed-text strong { color: var(--text-main); font-weight: 700; }
 
-        .description { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; font-weight: 500; margin-bottom: 25px; }
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .data-card { background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px; border: 1px solid #E2E8F0; }
+        .data-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 26px; color: var(--text-main); margin-bottom: 5px; }
+        .data-card p { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;}
 
-        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .data-card { background: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; border: 1px solid #E2E8F0; }
-        .data-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: var(--text-main); margin-bottom: 5px; }
-        .data-card p { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .tech-tag { background: #E2E8F0; color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
 
-        .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
-        .tech-tag { background: #E2E8F0; color: var(--text-main); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-
-        /* Professional Footer per video guidelines */
         footer {
             background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 40px 5%;
             position: relative; z-index: 10; display: flex; flex-direction: column; gap: 20px; text-align: center;
         }
         @media (min-width: 768px) { footer { flex-direction: row; justify-content: space-between; text-align: left; } }
         .footer-links { display: flex; gap: 20px; justify-content: center; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; }
         .footer-links a:hover { color: var(--primary); }
     </style>
 </head>
@@ -114,18 +153,28 @@
 
     <canvas id="webgl-canvas"></canvas>
 
+    <!-- Side HUD (Desktop Only) -->
     <div class="hud-panel">
         <div class="hud-item">
             <span>Location</span>
-            <strong>Ahmedabad, IN</strong>
+            <strong>Ahmedabad, India</strong>
         </div>
         <div class="hud-item">
-            <span>Specialty</span>
-            <strong>Digital Scale & Ops</strong>
+            <span>Core Focus</span>
+            <strong>Infrastructure & Scale</strong>
+        </div>
+        <div class="hud-item">
+            <span>Network Capacity</span>
+            <strong>400,000+ Users</strong>
         </div>
     </div>
 
+    <!-- Nav with your Image -->
     <nav>
+        <div class="nav-brand">
+            <img src="1000053771.png" alt="Manit Ruparel" class="nav-avatar">
+            <div class="nav-name">Manit Ruparel</div>
+        </div>
         <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4" target="_blank" class="contact-btn">
             <i class="fa-brands fa-linkedin"></i> Connect
         </a>
@@ -133,16 +182,16 @@
 
     <div class="ui-layer">
         
-        <!-- Hero Section -->
-        <section class="section">
-            <div class="glass-block">
-                <span class="year-tag">Manit Ruparel</span>
-                <h1 class="massive-title">Scale &<br><span>Operations.</span></h1>
-                <p class="description">I manage large-scale digital communities, build front-end web infrastructure, and produce high-retention video content. Scroll to view the timeline.</p>
-                <div class="tech-stack">
-                    <div class="tech-tag">Community Ops</div>
-                    <div class="tech-tag">Video Editing</div>
-                    <div class="tech-tag">HTML / CSS / JS</div>
+        <!-- UNIQUE HERO SECTION (No white box, massive text) -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Engineering Digital<br><span>Ecosystems.</span></h1>
+                <p class="hero-desc">I architect and manage digital infrastructure. From engineering native front-end B2B web applications, to executing high-retention video production for top-tier creators, to directing the total operational health of global communities exceeding 400,000 active users. I build systems that scale.</p>
+                
+                <div class="tech-stack" style="margin-top: 30px;">
+                    <div class="tech-tag" style="background: var(--primary); color: white;">Community Architecture</div>
+                    <div class="tech-tag" style="background: var(--text-main); color: white;">Post-Production</div>
+                    <div class="tech-tag" style="background: white; border: 1px solid #E2E8F0;">HTML / CSS / JS</div>
                 </div>
             </div>
         </section>
@@ -151,16 +200,18 @@
         <section class="section align-right">
             <div class="glass-block">
                 <span class="year-tag">2025 to Present</span>
-                <h1 class="massive-title">Server Head &<br><span>Event Manager.</span></h1>
-                <p class="description">Directing top-level server operations and executing live community events at massive scale.</p>
+                <h1 class="card-title">Server Head & Event Director</h1>
+                <p class="detailed-text">Scaling to nearly half a million users requires robust infrastructure, not just moderation. I direct cross-functional global staff teams and oversee the absolute operational integrity of the server.</p>
+                <p class="detailed-text">My focus includes engineering <strong>custom HTML/JS dashboards</strong> to automate and streamline ticketing workflows, alongside designing strict crisis-management protocols to maintain platform stability during massive traffic surges and automated bot raids.</p>
+                
                 <div class="data-grid">
                     <div class="data-card">
                         <h4>400,000+</h4>
-                        <p>Active Members Managed</p>
+                        <p>Active Members</p>
                     </div>
                     <div class="data-card">
-                        <h4><i class="fa-solid fa-server"></i></h4>
-                        <p>Infrastructure Scaling</p>
+                        <h4><i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i></h4>
+                        <p>Crisis Protocols</p>
                     </div>
                 </div>
             </div>
@@ -170,12 +221,14 @@
         <section class="section">
             <div class="glass-block">
                 <span class="year-tag">Mar 2026 to Jul 2026</span>
-                <h1 class="massive-title">Video<br><span>Editor.</span></h1>
-                <p class="description">Executed high-retention video editing and pacing strategies for the iFerg creator team. Focused on algorithm optimization, audience retention metrics, and strict brand guidelines.</p>
+                <h1 class="card-title">Video Editor (iFerg)</h1>
+                <p class="detailed-text">Recruited to execute high-retention post-production for one of the largest mobile gaming creators in the world. I translated raw gameplay into highly optimized, algorithm-friendly content.</p>
+                <p class="detailed-text">This required implementing advanced <strong>visual pacing, motion graphics, and audio mixing</strong> to maximize audience retention graphs. I successfully adapted my editing workflows to strictly match established brand guidelines while innovating visual hooks for the crucial first 30 seconds of viewership.</p>
+                
                 <div class="tech-stack">
-                    <div class="tech-tag">Retention Graphs</div>
+                    <div class="tech-tag">Retention Analytics</div>
                     <div class="tech-tag">Visual Pacing</div>
-                    <div class="tech-tag">Audio Mixing</div>
+                    <div class="tech-tag">Sound Design</div>
                 </div>
             </div>
         </section>
@@ -184,16 +237,18 @@
         <section class="section align-right">
             <div class="glass-block">
                 <span class="year-tag">Development Project</span>
-                <h1 class="massive-title">Founder,<br><span>TrendTrade.</span></h1>
-                <p class="description">Engineered a custom B2B aggregator platform connecting offline retailers with local micro-creators using native web technologies.</p>
+                <h1 class="card-title">TrendTrade B2B</h1>
+                <p class="detailed-text">Architected and deployed a multi-page B2B/B2C aggregator platform connecting offline retailers with micro-creators. Built natively with HTML, CSS, and JS, entirely bypassing heavy backend frameworks for maximum speed.</p>
+                <p class="detailed-text">I engineered a custom <strong>Procedural Generation JS engine</strong> to render 120 unique creator profiles instantly upon load, coupled with a real-time JavaScript search filtering algorithm, CSS scroll-reveals, and a fully responsive mobile-first UI logic simulating a native app.</p>
+                
                 <div class="data-grid">
                     <div class="data-card">
-                        <h4>SafePay</h4>
-                        <p>Escrow Concept Built</p>
+                        <h4>JS Engine</h4>
+                        <p>Procedural DB</p>
                     </div>
                     <div class="data-card">
-                        <h4>JS Engine</h4>
-                        <p>Procedural Generation</p>
+                        <h4>SafePay</h4>
+                        <p>Escrow Logic</p>
                     </div>
                 </div>
             </div>
@@ -203,16 +258,18 @@
         <section class="section">
             <div class="glass-block">
                 <span class="year-tag">2024 to 2025</span>
-                <h1 class="massive-title">Event<br><span>Manager.</span></h1>
-                <p class="description">Designed and hosted live digital events. Scaled engagement and managed real-time community coordination, contributing to the server's growth from 50k to 200k members.</p>
+                <h1 class="card-title">Event Manager</h1>
+                <p class="detailed-text">Spearheaded the live interaction strategy that rapidly scaled the community from its foundational numbers to mass adoption. I conceptualized, scheduled, and hosted digital tournaments, AMAs, and interactive stage events.</p>
+                <p class="detailed-text">This role required hyper-vigilant operational awareness, successfully managing real-time coordination for <strong>tens of thousands of concurrent active voice-channel participants</strong> without network or moderation failure.</p>
+                
                 <div class="data-grid">
                     <div class="data-card">
                         <h4>200,000</h4>
-                        <p>Members Reached</p>
+                        <p>Total Members</p>
                     </div>
                     <div class="data-card">
-                        <h4><i class="fa-solid fa-microphone"></i></h4>
-                        <p>Live Event Hosting</p>
+                        <h4>10k+</h4>
+                        <p>Concurrent VC Users</p>
                     </div>
                 </div>
             </div>
@@ -222,27 +279,18 @@
         <section class="section align-right">
             <div class="glass-block">
                 <span class="year-tag">2022 to 2024</span>
-                <h1 class="massive-title">Server<br><span>Manager.</span></h1>
-                <p class="description">Established core server hierarchy, moderation rulesets, and staff onboarding processes. Built the foundational infrastructure required to scale the community securely.</p>
-                <div class="data-grid">
-                    <div class="data-card">
-                        <h4>50,000</h4>
-                        <p>Initial Member Base</p>
-                    </div>
-                    <div class="data-card">
-                        <h4><i class="fa-solid fa-shield-halved"></i></h4>
-                        <p>Moderation Architecture</p>
-                    </div>
-                </div>
+                <h1 class="card-title">Server Manager</h1>
+                <p class="detailed-text">Laid the critical groundwork for server hierarchy and moderation rule sets. Built the initial staff onboarding pipelines and wrote the core Standard Operating Procedures (SOPs).</p>
+                <p class="detailed-text">By integrating automated defense systems and structuring the administration team, I successfully transitioned the community from a niche group into a <strong>highly moderated digital space</strong> capable of aggressive, sustained scaling.</p>
             </div>
         </section>
 
         <!-- Contact Section -->
         <section class="section" style="align-items: center; text-align: center; min-height: 50vh;">
             <div class="glass-block" style="display: flex; flex-direction: column; align-items: center;">
-                <h1 class="massive-title">Let's <span>Build.</span></h1>
-                <p class="description" style="margin-bottom: 20px;">Open to new opportunities in community architecture and front-end development.</p>
-                <a href="mailto:manitruparell@gmail.com" class="contact-btn" style="font-size: 16px; padding: 16px 32px;"><i class="fa-solid fa-envelope"></i> manitruparell@gmail.com</a>
+                <h1 class="card-title">Let's Build.</h1>
+                <p class="detailed-text" style="text-align: center; max-width: 500px; margin-bottom: 30px;">Currently open to new opportunities in community architecture, front-end development, and post-production scaling.</p>
+                <a href="mailto:manitruparell@gmail.com" class="contact-btn" style="font-size: 16px; padding: 16px 32px;"><i class="fa-solid fa-envelope" style="margin-right: 8px;"></i> manitruparell@gmail.com</a>
             </div>
         </section>
 
@@ -250,7 +298,7 @@
 
     <!-- Required Footer Links -->
     <footer>
-        <div style="color: var(--text-muted); font-size: 13px; font-weight: 600;">&copy; 2026 Manit Ruparel</div>
+        <div style="color: var(--text-muted); font-size: 14px; font-weight: 600;">&copy; 2026 Manit Ruparel</div>
         <div class="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms & Conditions</a>
@@ -261,7 +309,7 @@
     <script>
         const canvas = document.querySelector('#webgl-canvas');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2('#F8FAFC', 0.035);
+        scene.fog = new THREE.FogExp2('#F8FAFC', 0.03); // Slightly thinner fog to show the shapes better
 
         const sizes = { width: window.innerWidth, height: window.innerHeight };
         const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
@@ -280,7 +328,7 @@
         pointLight1.position.set(5, 5, 5);
         scene.add(pointLight1);
 
-        const pointLight2 = new THREE.PointLight(0x10B981, 3, 20); // Emerald
+        const pointLight2 = new THREE.PointLight(0x10B981, 3, 20); // Emerald Green
         pointLight2.position.set(-5, -5, 2);
         scene.add(pointLight2);
 
@@ -288,7 +336,6 @@
         const matSolid = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.6, roughness: 0.2 });
         const matWire = new THREE.MeshStandardMaterial({ color: 0x2563EB, wireframe: true, transparent: true, opacity: 0.2 });
 
-        // Tightly packed Y-positions to match the smaller CSS scroll gaps
         const createObj = (geo, isWire, x, y) => {
             const mesh = new THREE.Mesh(geo, isWire ? matWire : matSolid);
             mesh.position.set(x, y, -2);
@@ -297,12 +344,13 @@
             return mesh;
         };
 
-        createObj(new THREE.TorusKnotGeometry(1.5, 0.5, 100, 16), false, 3.5, 0);       // Hero
-        createObj(new THREE.IcosahedronGeometry(1.8, 0), true, -3.5, -5);              // 400k
-        createObj(new THREE.TorusGeometry(1.8, 0.4, 16, 50), false, 3.5, -10);         // iFerg
-        createObj(new THREE.OctahedronGeometry(1.8, 0), true, -3.5, -15);              // TrendTrade
-        createObj(new THREE.TorusKnotGeometry(1.2, 0.4, 64, 8), false, 3.5, -20);      // 200k
-        createObj(new THREE.IcosahedronGeometry(1.8, 1), true, -3.5, -25);             // 50k
+        // Spaced out the objects further to match the new massive text blocks
+        createObj(new THREE.TorusKnotGeometry(1.6, 0.5, 100, 16), false, 4, 0);       // Hero
+        createObj(new THREE.IcosahedronGeometry(2, 0), true, -4, -7);                 // 400k
+        createObj(new THREE.TorusGeometry(1.8, 0.4, 16, 50), false, 4, -14);          // iFerg
+        createObj(new THREE.OctahedronGeometry(2, 0), true, -4, -21);                 // TrendTrade
+        createObj(new THREE.TorusKnotGeometry(1.4, 0.4, 64, 8), false, 4, -28);       // 200k
+        createObj(new THREE.IcosahedronGeometry(1.8, 1), true, -4, -35);              // 50k
 
         const particlesGeo = new THREE.BufferGeometry();
         const particlesCount = 200; 
@@ -335,8 +383,8 @@
             const elapsed = clock.getElapsedTime();
             targetX = mouseX * 0.5; targetY = mouseY * 0.5;
 
-            // Camera multiplier matches the tightly packed Y-positions of the objects
-            camera.position.y = -scrollY / sizes.height * 4.5;
+            // Updated camera scroll speed multiplier to accommodate the taller text sections
+            camera.position.y = -scrollY / sizes.height * 5.8;
             camera.position.x += (targetX - camera.position.x) * 0.05;
             camera.lookAt(0, camera.position.y, 0);
 
