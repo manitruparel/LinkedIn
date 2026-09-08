@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manit Ruparel | Digital Architect</title>
-    <!-- Three.js Library -->
+    <title>Manit Ruparel | Digital Operations</title>
+    <!-- Professional Favicon Requirement -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
@@ -12,27 +13,27 @@
         :root {
             --text-main: #0F172A;
             --text-muted: #475569;
-            --indigo: #4B0082;
-            --coral: #FF6F61;
+            --primary: #2563EB; /* Royal Blue */
+            --accent: #10B981; /* Emerald Green */
+            --bg-color: #F8FAFC;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
-            background-color: #F8FAFC; 
+            background-color: var(--bg-color); 
             color: var(--text-main); 
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden; 
             overscroll-behavior: none;
         }
 
-        /* 3D Canvas fixed in the background */
         #webgl-canvas {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 1; pointer-events: none;
         }
 
-        /* Persistent HUD (Heads Up Display) for extra data */
+        /* Persistent HUD */
         .hud-panel {
             position: fixed; top: 25px; left: 25px; z-index: 100;
             display: none; flex-direction: column; gap: 15px; pointer-events: none;
@@ -40,103 +41,94 @@
         @media (min-width: 1100px) { .hud-panel { display: flex; } }
         
         .hud-item {
-            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,1); padding: 12px 20px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,1); padding: 12px 20px; border-radius: 8px; /* No pill shapes */
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .hud-item span { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 3px; }
-        .hud-item strong { font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--indigo); }
+        .hud-item strong { font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--text-main); }
 
-        /* Navigation */
         nav {
             position: fixed; top: 0; right: 0; width: 100%; padding: 20px 5%; 
             display: flex; justify-content: flex-end; align-items: center;
             z-index: 100; pointer-events: none;
         }
-        @media (min-width: 1100px) { nav { width: auto; } }
         
         .contact-btn { 
-            background: var(--text-main); color: #ffffff; padding: 12px 28px; border-radius: 50px; 
-            text-decoration: none; font-weight: 700; font-size: 14px; transition: 0.3s; pointer-events: auto;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+            background: var(--text-main); color: #ffffff; padding: 12px 24px; border-radius: 8px; /* Strict 8px border */
+            text-decoration: none; font-weight: 700; font-size: 14px; transition: 0.2s; pointer-events: auto;
         }
-        .contact-btn:hover { background: var(--indigo); transform: translateY(-3px); }
+        .contact-btn:hover { background: var(--primary); transform: translateY(-2px); }
 
-        /* UI Overlay Layer */
         .ui-layer { position: relative; z-index: 10; width: 100%; }
 
-        /* Scroll Sections */
+        /* Tighter Scroll Sections */
         .section {
-            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-            padding: 100px 5%; position: relative; pointer-events: none;
+            min-height: 80vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 80px 5%; position: relative; pointer-events: none;
         }
 
-        /* Frosted Glass Data Blocks */
         .glass-block {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 1);
-            border-radius: 24px; padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border-radius: 12px; padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
             max-width: 750px; pointer-events: auto; transition: 0.3s;
         }
-        .glass-block:hover { border-color: rgba(75, 0, 130, 0.2); box-shadow: 0 25px 50px rgba(75, 0, 130, 0.1); }
+        .glass-block:hover { border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 15px 40px rgba(37, 99, 235, 0.1); }
 
         .align-right { align-items: flex-end; }
         
         .year-tag {
-            font-size: 13px; color: var(--coral); font-weight: 800; letter-spacing: 2px;
-            margin-bottom: 15px; display: inline-block; background: rgba(255, 111, 97, 0.1);
-            padding: 6px 12px; border-radius: 8px; text-transform: uppercase;
+            font-size: 12px; color: var(--primary); font-weight: 800; letter-spacing: 1px;
+            margin-bottom: 15px; display: inline-block; background: rgba(37, 99, 235, 0.1);
+            padding: 6px 12px; border-radius: 6px; text-transform: uppercase;
         }
 
-        .massive-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1; margin-bottom: 25px; letter-spacing: -1px; color: var(--text-main); }
-        .massive-title span { color: var(--indigo); }
+        .massive-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; color: var(--text-main); }
+        .massive-title span { color: var(--primary); }
 
-        .description { font-size: 1.1rem; color: var(--text-muted); line-height: 1.7; font-weight: 500; margin-bottom: 25px; }
+        .description { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; font-weight: 500; margin-bottom: 25px; }
 
-        /* Dense Data Points */
-        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .data-card { background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.8); }
-        .data-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: var(--indigo); margin-bottom: 5px; }
-        .data-card p { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .data-card { background: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; border: 1px solid #E2E8F0; }
+        .data-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: var(--text-main); margin-bottom: 5px; }
+        .data-card p { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
 
-        .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-        .tech-tag { background: var(--text-main); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .tech-tag { background: #E2E8F0; color: var(--text-main); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
-        /* Scroll Indicator */
-        .scroll-indicator {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);
+        /* Professional Footer per video guidelines */
+        footer {
+            background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 40px 5%;
+            position: relative; z-index: 10; display: flex; flex-direction: column; gap: 20px; text-align: center;
         }
-        .scroll-line { width: 2px; height: 30px; background: var(--indigo); animation: scrollAnim 2s infinite; border-radius: 2px; }
-        @keyframes scrollAnim { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 50.1% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+        @media (min-width: 768px) { footer { flex-direction: row; justify-content: space-between; text-align: left; } }
+        .footer-links { display: flex; gap: 20px; justify-content: center; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; }
+        .footer-links a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <!-- 3D Engine Canvas -->
     <canvas id="webgl-canvas"></canvas>
 
-    <!-- Persistent HUD (Loaded with data) -->
     <div class="hud-panel">
         <div class="hud-item">
-            <span>Current Location</span>
-            <strong><i class="fa-solid fa-location-dot" style="color: var(--coral);"></i> Ahmedabad, IN</strong>
+            <span>Location</span>
+            <strong>Ahmedabad, IN</strong>
         </div>
         <div class="hud-item">
-            <span>System Uptime</span>
-            <strong>99.9% Operational</strong>
-        </div>
-        <div class="hud-item">
-            <span>Network Scale</span>
-            <strong>400,000+ Users</strong>
+            <span>Specialty</span>
+            <strong>Digital Scale & Ops</strong>
         </div>
     </div>
 
     <nav>
-        <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4" target="_blank" class="contact-btn"><i class="fa-brands fa-linkedin"></i> Connect on LinkedIn</a>
+        <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4" target="_blank" class="contact-btn">
+            <i class="fa-brands fa-linkedin"></i> Connect
+        </a>
     </nav>
 
     <div class="ui-layer">
@@ -145,29 +137,25 @@
         <section class="section">
             <div class="glass-block">
                 <span class="year-tag">Manit Ruparel</span>
-                <h1 class="massive-title">Digital Scale &<br><span>Architecture.</span></h1>
-                <p class="description">I build front-end web infrastructure, engineer massive community ecosystems, and direct high-retention post-production. Scroll to view the operational matrix.</p>
-                
+                <h1 class="massive-title">Scale &<br><span>Operations.</span></h1>
+                <p class="description">I manage large-scale digital communities, build front-end web infrastructure, and produce high-retention video content. Scroll to view the timeline.</p>
                 <div class="tech-stack">
-                    <div class="tech-tag">HTML5 / CSS3 / JS</div>
-                    <div class="tech-tag">Systems Architecture</div>
-                    <div class="tech-tag">Video Editing</div>
                     <div class="tech-tag">Community Ops</div>
+                    <div class="tech-tag">Video Editing</div>
+                    <div class="tech-tag">HTML / CSS / JS</div>
                 </div>
             </div>
-            <div class="scroll-indicator">Scroll<div class="scroll-line"></div></div>
         </section>
 
-        <!-- Current Role (Server Head) -->
+        <!-- 400k Server Head -->
         <section class="section align-right">
             <div class="glass-block">
-                <span class="year-tag">2025 — PRESENT</span>
-                <h1 class="massive-title">Server Head &<br><span>Event Director.</span></h1>
-                <p class="description">Directing top-level server operations and executing massive community events for a scale of nearly half a million active users.</p>
-                
+                <span class="year-tag">2025 to Present</span>
+                <h1 class="massive-title">Server Head &<br><span>Event Manager.</span></h1>
+                <p class="description">Directing top-level server operations and executing live community events at massive scale.</p>
                 <div class="data-grid">
                     <div class="data-card">
-                        <h4>400k+</h4>
+                        <h4>400,000+</h4>
                         <p>Active Members Managed</p>
                     </div>
                     <div class="data-card">
@@ -175,21 +163,29 @@
                         <p>Infrastructure Scaling</p>
                     </div>
                 </div>
-                
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-check" style="color: var(--coral); margin-right: 10px;"></i> Engineered custom HTML dashboards to streamline moderator ticketing workflows.</li>
-                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-check" style="color: var(--coral); margin-right: 10px;"></i> Managed cross-functional volunteer teams to maintain high safety standards.</li>
-                </ul>
+            </div>
+        </section>
+
+        <!-- iFerg Video Editor -->
+        <section class="section">
+            <div class="glass-block">
+                <span class="year-tag">Mar 2026 to Jul 2026</span>
+                <h1 class="massive-title">Video<br><span>Editor.</span></h1>
+                <p class="description">Executed high-retention video editing and pacing strategies for the iFerg creator team. Focused on algorithm optimization, audience retention metrics, and strict brand guidelines.</p>
+                <div class="tech-stack">
+                    <div class="tech-tag">Retention Graphs</div>
+                    <div class="tech-tag">Visual Pacing</div>
+                    <div class="tech-tag">Audio Mixing</div>
+                </div>
             </div>
         </section>
 
         <!-- TrendTrade Project -->
-        <section class="section">
+        <section class="section align-right">
             <div class="glass-block">
-                <span class="year-tag">DEVELOPMENT PROJECT</span>
+                <span class="year-tag">Development Project</span>
                 <h1 class="massive-title">Founder,<br><span>TrendTrade.</span></h1>
-                <p class="description">Designed and developed a multi-page B2B and B2C aggregator platform connecting offline retailers with local micro-creators using native web technologies.</p>
-                
+                <p class="description">Engineered a custom B2B aggregator platform connecting offline retailers with local micro-creators using native web technologies.</p>
                 <div class="data-grid">
                     <div class="data-card">
                         <h4>SafePay</h4>
@@ -197,142 +193,133 @@
                     </div>
                     <div class="data-card">
                         <h4>JS Engine</h4>
-                        <p>Procedural DB Generation</p>
+                        <p>Procedural Generation</p>
                     </div>
-                </div>
-                
-                <div class="tech-stack">
-                    <div class="tech-tag">UI/UX Design</div>
-                    <div class="tech-tag">JavaScript Search API</div>
-                    <div class="tech-tag">Responsive Layouts</div>
                 </div>
             </div>
         </section>
 
-        <!-- Video Editing -->
+        <!-- 200k Event Manager -->
+        <section class="section">
+            <div class="glass-block">
+                <span class="year-tag">2024 to 2025</span>
+                <h1 class="massive-title">Event<br><span>Manager.</span></h1>
+                <p class="description">Designed and hosted live digital events. Scaled engagement and managed real-time community coordination, contributing to the server's growth from 50k to 200k members.</p>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h4>200,000</h4>
+                        <p>Members Reached</p>
+                    </div>
+                    <div class="data-card">
+                        <h4><i class="fa-solid fa-microphone"></i></h4>
+                        <p>Live Event Hosting</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 50k Server Manager -->
         <section class="section align-right">
             <div class="glass-block">
-                <span class="year-tag">MAR 2026 — JUL 2026</span>
-                <h1 class="massive-title">Editor,<br><span>iFerg.</span></h1>
-                <p class="description">Executed high-retention video editing and pacing strategies for one of the largest mobile gaming creators in the world.</p>
-                
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-play" style="color: var(--indigo); margin-right: 10px;"></i> Optimized visual pacing and audio mixing to maximize audience retention graphs.</li>
-                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-play" style="color: var(--indigo); margin-right: 10px;"></i> Adapted editing style to strictly match established brand guidelines.</li>
-                </ul>
+                <span class="year-tag">2022 to 2024</span>
+                <h1 class="massive-title">Server<br><span>Manager.</span></h1>
+                <p class="description">Established core server hierarchy, moderation rulesets, and staff onboarding processes. Built the foundational infrastructure required to scale the community securely.</p>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h4>50,000</h4>
+                        <p>Initial Member Base</p>
+                    </div>
+                    <div class="data-card">
+                        <h4><i class="fa-solid fa-shield-halved"></i></h4>
+                        <p>Moderation Architecture</p>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section class="section" style="align-items: center; text-align: center;">
+        <section class="section" style="align-items: center; text-align: center; min-height: 50vh;">
             <div class="glass-block" style="display: flex; flex-direction: column; align-items: center;">
                 <h1 class="massive-title">Let's <span>Build.</span></h1>
-                <p class="description" style="margin-bottom: 30px;">Currently open to new opportunities in community architecture, front-end development, and post-production.</p>
-                <a href="mailto:manitruparell@gmail.com" class="contact-btn" style="font-size: 18px; padding: 18px 40px;"><i class="fa-solid fa-envelope"></i> manitruparell@gmail.com</a>
+                <p class="description" style="margin-bottom: 20px;">Open to new opportunities in community architecture and front-end development.</p>
+                <a href="mailto:manitruparell@gmail.com" class="contact-btn" style="font-size: 16px; padding: 16px 32px;"><i class="fa-solid fa-envelope"></i> manitruparell@gmail.com</a>
             </div>
         </section>
 
     </div>
 
-    <!-- The 3D Engine Script -->
+    <!-- Required Footer Links -->
+    <footer>
+        <div style="color: var(--text-muted); font-size: 13px; font-weight: 600;">&copy; 2026 Manit Ruparel</div>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+        </div>
+    </footer>
+
+    <!-- 3D Engine Script -->
     <script>
-        // 1. Scene Setup
         const canvas = document.querySelector('#webgl-canvas');
         const scene = new THREE.Scene();
-        // Bright, clean fog to blend objects into the white background
-        scene.fog = new THREE.FogExp2('#F8FAFC', 0.04);
+        scene.fog = new THREE.FogExp2('#F8FAFC', 0.035);
 
-        // 2. Camera Setup
         const sizes = { width: window.innerWidth, height: window.innerHeight };
         const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
         camera.position.z = 6;
         scene.add(camera);
 
-        // 3. Renderer (Optimized for performance)
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false });
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
         renderer.setSize(sizes.width, sizes.height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0xF8FAFC, 1); // Solid bright background
+        renderer.setClearColor(0xF8FAFC, 1);
 
-        // 4. Lighting (Bright, fresh colors: Indigo & Coral)
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
         scene.add(ambientLight);
 
-        const pointLight1 = new THREE.PointLight(0x4B0082, 3, 20); // Indigo Light
+        const pointLight1 = new THREE.PointLight(0x2563EB, 4, 20); // Royal Blue
         pointLight1.position.set(5, 5, 5);
         scene.add(pointLight1);
 
-        const pointLight2 = new THREE.PointLight(0xFF6F61, 3, 20); // Coral Light
+        const pointLight2 = new THREE.PointLight(0x10B981, 3, 20); // Emerald
         pointLight2.position.set(-5, -5, 2);
         scene.add(pointLight2);
 
-        // 5. 3D Objects (Sleek, bright metallic geometry)
         const objects = [];
-        const materialSolid = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.7, roughness: 0.1 });
-        const materialWire = new THREE.MeshStandardMaterial({ color: 0x4B0082, wireframe: true, transparent: true, opacity: 0.15 });
+        const matSolid = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.6, roughness: 0.2 });
+        const matWire = new THREE.MeshStandardMaterial({ color: 0x2563EB, wireframe: true, transparent: true, opacity: 0.2 });
 
-        // Hero Section Object
-        const geo1 = new THREE.TorusKnotGeometry(1.5, 0.5, 100, 16);
-        const mesh1 = new THREE.Mesh(geo1, materialSolid);
-        mesh1.position.set(3.5, 0, -2);
-        scene.add(mesh1);
-        objects.push(mesh1);
+        // Tightly packed Y-positions to match the smaller CSS scroll gaps
+        const createObj = (geo, isWire, x, y) => {
+            const mesh = new THREE.Mesh(geo, isWire ? matWire : matSolid);
+            mesh.position.set(x, y, -2);
+            scene.add(mesh);
+            objects.push(mesh);
+            return mesh;
+        };
 
-        // Server Section Object
-        const geo2 = new THREE.IcosahedronGeometry(2, 0);
-        const mesh2 = new THREE.Mesh(geo2, materialWire);
-        mesh2.position.set(-3.5, -7, -3);
-        scene.add(mesh2);
-        objects.push(mesh2);
-        
-        const geo2Inner = new THREE.IcosahedronGeometry(1.2, 0);
-        const mesh2Inner = new THREE.Mesh(geo2Inner, materialSolid);
-        mesh2Inner.position.set(-3.5, -7, -3);
-        scene.add(mesh2Inner);
+        createObj(new THREE.TorusKnotGeometry(1.5, 0.5, 100, 16), false, 3.5, 0);       // Hero
+        createObj(new THREE.IcosahedronGeometry(1.8, 0), true, -3.5, -5);              // 400k
+        createObj(new THREE.TorusGeometry(1.8, 0.4, 16, 50), false, 3.5, -10);         // iFerg
+        createObj(new THREE.OctahedronGeometry(1.8, 0), true, -3.5, -15);              // TrendTrade
+        createObj(new THREE.TorusKnotGeometry(1.2, 0.4, 64, 8), false, 3.5, -20);      // 200k
+        createObj(new THREE.IcosahedronGeometry(1.8, 1), true, -3.5, -25);             // 50k
 
-        // TrendTrade Section Object
-        const geo3 = new THREE.TorusGeometry(2, 0.4, 16, 50);
-        const mesh3 = new THREE.Mesh(geo3, materialSolid);
-        mesh3.position.set(3, -14, -4);
-        scene.add(mesh3);
-        objects.push(mesh3);
-
-        // iFerg Section Object
-        const geo4 = new THREE.OctahedronGeometry(2, 0);
-        const mesh4 = new THREE.Mesh(geo4, materialWire);
-        mesh4.position.set(-3, -21, -3);
-        scene.add(mesh4);
-        objects.push(mesh4);
-
-        // 6. Floating Ambient Particles (Coral & Indigo)
-        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesGeo = new THREE.BufferGeometry();
         const particlesCount = 200; 
         const posArray = new Float32Array(particlesCount * 3);
-        
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 20;
-        }
-        
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({ size: 0.08, color: 0xFF6F61, transparent: true, opacity: 0.6 });
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        for(let i = 0; i < particlesCount * 3; i++) posArray[i] = (Math.random() - 0.5) * 20;
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMat = new THREE.PointsMaterial({ size: 0.05, color: 0x2563EB, transparent: true, opacity: 0.5 });
+        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
         scene.add(particlesMesh);
 
-        // 7. Scroll and Mouse Parallax Interaction
         let scrollY = window.scrollY;
-        
-        window.addEventListener('scroll', () => {
-            scrollY = window.scrollY;
-        });
+        window.addEventListener('scroll', () => scrollY = window.scrollY);
 
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
-
-        window.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / sizes.width) * 2 - 1;
-            mouseY = -(event.clientY / sizes.height) * 2 + 1;
+        let mouseX = 0; let mouseY = 0; let targetX = 0; let targetY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / sizes.width) * 2 - 1;
+            mouseY = -(e.clientY / sizes.height) * 2 + 1;
         });
 
         window.addEventListener('resize', () => {
@@ -343,45 +330,25 @@
             renderer.setSize(sizes.width, sizes.height);
         });
 
-        // 8. Animation Loop
         const clock = new THREE.Clock();
-
         const tick = () => {
-            const elapsedTime = clock.getElapsedTime();
+            const elapsed = clock.getElapsedTime();
+            targetX = mouseX * 0.5; targetY = mouseY * 0.5;
 
-            // Parallax Easing
-            targetX = mouseX * 0.5;
-            targetY = mouseY * 0.5;
-
-            // Camera moves down as user scrolls down the page
-            camera.position.y = -scrollY / sizes.height * 7;
-            
-            // Subtle camera sway based on mouse
-            camera.position.x += (targetX - camera.position.x) * 0.02;
+            // Camera multiplier matches the tightly packed Y-positions of the objects
+            camera.position.y = -scrollY / sizes.height * 4.5;
+            camera.position.x += (targetX - camera.position.x) * 0.05;
             camera.lookAt(0, camera.position.y, 0);
 
-            // Rotate objects continuously
-            mesh1.rotation.y = elapsedTime * 0.2;
-            mesh1.rotation.x = elapsedTime * 0.15;
-            
-            mesh2.rotation.y = elapsedTime * 0.1;
-            mesh2.rotation.x = elapsedTime * 0.1;
-            mesh2Inner.rotation.y = elapsedTime * -0.2;
+            objects.forEach((obj, index) => {
+                obj.rotation.x = elapsed * (0.1 + index * 0.02);
+                obj.rotation.y = elapsed * (0.2 + index * 0.01);
+            });
 
-            mesh3.rotation.x = elapsedTime * 0.2;
-            mesh3.rotation.y = elapsedTime * 0.3;
-            
-            mesh4.rotation.z = elapsedTime * 0.2;
-            mesh4.rotation.x = elapsedTime * 0.2;
-
-            // Slowly rotate particles
-            particlesMesh.rotation.y = elapsedTime * 0.03;
-
-            // Render
+            particlesMesh.rotation.y = elapsed * 0.03;
             renderer.render(scene, camera);
             window.requestAnimationFrame(tick);
         }
-
         tick();
     </script>
 </body>
