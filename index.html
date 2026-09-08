@@ -3,187 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manit Ruparel | Spatial Portfolio</title>
+    <title>Manit Ruparel | Digital Architect</title>
     <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
+        :root {
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            --indigo: #4B0082;
+            --coral: #FF6F61;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
-            background-color: #050505; 
-            color: #ffffff; 
+            background-color: #F8FAFC; 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden; 
             overscroll-behavior: none;
         }
 
         /* 3D Canvas fixed in the background */
         #webgl-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 1; pointer-events: none;
         }
 
-        /* Gradient overlay to ensure text readability */
-        .vignette {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, transparent 30%, #050505 100%);
-            z-index: 2;
-            pointer-events: none;
+        /* Persistent HUD (Heads Up Display) for extra data */
+        .hud-panel {
+            position: fixed; top: 25px; left: 25px; z-index: 100;
+            display: none; flex-direction: column; gap: 15px; pointer-events: none;
         }
+        @media (min-width: 1100px) { .hud-panel { display: flex; } }
+        
+        .hud-item {
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,1); padding: 12px 20px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .hud-item span { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 3px; }
+        .hud-item strong { font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--indigo); }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; right: 0; width: 100%; padding: 20px 5%; 
+            display: flex; justify-content: flex-end; align-items: center;
+            z-index: 100; pointer-events: none;
+        }
+        @media (min-width: 1100px) { nav { width: auto; } }
+        
+        .contact-btn { 
+            background: var(--text-main); color: #ffffff; padding: 12px 28px; border-radius: 50px; 
+            text-decoration: none; font-weight: 700; font-size: 14px; transition: 0.3s; pointer-events: auto;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+        }
+        .contact-btn:hover { background: var(--indigo); transform: translateY(-3px); }
 
         /* UI Overlay Layer */
-        .ui-layer {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-        }
-
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 25px 5%; 
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 100; mix-blend-mode: difference;
-        }
-        .logo { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
-        .contact-btn { 
-            background: #ffffff; color: #000000; padding: 10px 24px; border-radius: 50px; 
-            text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.3s; pointer-events: auto;
-        }
-        .contact-btn:hover { transform: scale(1.05); }
+        .ui-layer { position: relative; z-index: 10; width: 100%; }
 
         /* Scroll Sections */
         .section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 10%;
-            position: relative;
-            pointer-events: none;
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 100px 5%; position: relative; pointer-events: none;
         }
 
-        .content-block {
-            max-width: 800px;
-            pointer-events: auto; /* Re-enable clicking for links */
+        /* Frosted Glass Data Blocks */
+        .glass-block {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            border-radius: 24px; padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            max-width: 750px; pointer-events: auto; transition: 0.3s;
         }
+        .glass-block:hover { border-color: rgba(75, 0, 130, 0.2); box-shadow: 0 25px 50px rgba(75, 0, 130, 0.1); }
 
-        .align-right { align-items: flex-end; text-align: right; }
+        .align-right { align-items: flex-end; }
         
         .year-tag {
-            font-size: 1.2rem; color: #d4af37; font-weight: 700; letter-spacing: 4px;
-            margin-bottom: 10px; display: block;
+            font-size: 13px; color: var(--coral); font-weight: 800; letter-spacing: 2px;
+            margin-bottom: 15px; display: inline-block; background: rgba(255, 111, 97, 0.1);
+            padding: 6px 12px; border-radius: 8px; text-transform: uppercase;
         }
 
-        .massive-title {
-            font-size: clamp(3rem, 8vw, 7rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
+        .massive-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1; margin-bottom: 25px; letter-spacing: -1px; color: var(--text-main); }
+        .massive-title span { color: var(--indigo); }
 
-        .massive-title span {
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
-        }
+        .description { font-size: 1.1rem; color: var(--text-muted); line-height: 1.7; font-weight: 500; margin-bottom: 25px; }
 
-        .description {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            color: #a0a0a0;
-            line-height: 1.6;
-            max-width: 600px;
-            font-weight: 300;
-        }
+        /* Dense Data Points */
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .data-card { background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.8); }
+        .data-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: var(--indigo); margin-bottom: 5px; }
+        .data-card p { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
 
-        .links-row {
-            display: flex; gap: 20px; margin-top: 40px; flex-wrap: wrap;
-        }
-        .links-row a {
-            display: inline-flex; align-items: center; gap: 10px; padding: 15px 30px; 
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #ffffff; 
-            text-decoration: none; font-weight: 700; transition: 0.3s; backdrop-filter: blur(10px);
-        }
-        .links-row a:hover { background: #ffffff; color: #000000; }
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+        .tech-tag { background: var(--text-main); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
 
         /* Scroll Indicator */
         .scroll-indicator {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 10px;
-            opacity: 0.5; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);
         }
-        .scroll-line { width: 1px; height: 40px; background: #ffffff; animation: scrollAnim 2s infinite; }
+        .scroll-line { width: 2px; height: 30px; background: var(--indigo); animation: scrollAnim 2s infinite; border-radius: 2px; }
         @keyframes scrollAnim { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 50.1% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
     </style>
 </head>
 <body>
 
-    <!-- The 3D Engine Canvas -->
+    <!-- 3D Engine Canvas -->
     <canvas id="webgl-canvas"></canvas>
-    <div class="vignette"></div>
+
+    <!-- Persistent HUD (Loaded with data) -->
+    <div class="hud-panel">
+        <div class="hud-item">
+            <span>Current Location</span>
+            <strong><i class="fa-solid fa-location-dot" style="color: var(--coral);"></i> Ahmedabad, IN</strong>
+        </div>
+        <div class="hud-item">
+            <span>System Uptime</span>
+            <strong>99.9% Operational</strong>
+        </div>
+        <div class="hud-item">
+            <span>Network Scale</span>
+            <strong>400,000+ Users</strong>
+        </div>
+    </div>
 
     <nav>
-        <div class="logo">Manit Ruparel</div>
-        <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4" target="_blank" class="contact-btn">LinkedIn</a>
+        <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4" target="_blank" class="contact-btn"><i class="fa-brands fa-linkedin"></i> Connect on LinkedIn</a>
     </nav>
 
     <div class="ui-layer">
         
         <!-- Hero Section -->
         <section class="section">
-            <div class="content-block">
-                <span class="year-tag">DIGITAL ARCHITECT</span>
-                <h1 class="massive-title">Scale &<br><span>Operations.</span></h1>
-                <p class="description">Architecting infrastructure and engineering engagement for ecosystems exceeding 400,000 active users. Scroll to explore the spatial timeline.</p>
+            <div class="glass-block">
+                <span class="year-tag">Manit Ruparel</span>
+                <h1 class="massive-title">Digital Scale &<br><span>Architecture.</span></h1>
+                <p class="description">I build front-end web infrastructure, engineer massive community ecosystems, and direct high-retention post-production. Scroll to view the operational matrix.</p>
                 
-                <div class="links-row">
-                    <a href="mailto:manitruparell@gmail.com"><i class="fa-solid fa-envelope"></i> Contact</a>
-                    <a href="https://www.linkedin.com/in/manit-ruparel-8b56343a4" target="_blank"><i class="fa-brands fa-linkedin"></i> Network</a>
+                <div class="tech-stack">
+                    <div class="tech-tag">HTML5 / CSS3 / JS</div>
+                    <div class="tech-tag">Systems Architecture</div>
+                    <div class="tech-tag">Video Editing</div>
+                    <div class="tech-tag">Community Ops</div>
                 </div>
             </div>
             <div class="scroll-indicator">Scroll<div class="scroll-line"></div></div>
         </section>
 
-        <!-- Current Role -->
+        <!-- Current Role (Server Head) -->
         <section class="section align-right">
-            <div class="content-block">
+            <div class="glass-block">
                 <span class="year-tag">2025 — PRESENT</span>
-                <h1 class="massive-title">Server<br><span>Head.</span></h1>
-                <p class="description" style="margin-left: auto;">Directing cross-functional moderation, executing live digital events, and overseeing the structural integrity of a 400,000+ member community. Building custom automated dashboards to streamline global staff operations.</p>
+                <h1 class="massive-title">Server Head &<br><span>Event Director.</span></h1>
+                <p class="description">Directing top-level server operations and executing massive community events for a scale of nearly half a million active users.</p>
+                
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h4>400k+</h4>
+                        <p>Active Members Managed</p>
+                    </div>
+                    <div class="data-card">
+                        <h4><i class="fa-solid fa-server"></i></h4>
+                        <p>Infrastructure Scaling</p>
+                    </div>
+                </div>
+                
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-check" style="color: var(--coral); margin-right: 10px;"></i> Engineered custom HTML dashboards to streamline moderator ticketing workflows.</li>
+                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-check" style="color: var(--coral); margin-right: 10px;"></i> Managed cross-functional volunteer teams to maintain high safety standards.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- TrendTrade Project -->
+        <section class="section">
+            <div class="glass-block">
+                <span class="year-tag">DEVELOPMENT PROJECT</span>
+                <h1 class="massive-title">Founder,<br><span>TrendTrade.</span></h1>
+                <p class="description">Designed and developed a multi-page B2B and B2C aggregator platform connecting offline retailers with local micro-creators using native web technologies.</p>
+                
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h4>SafePay</h4>
+                        <p>Escrow Concept Built</p>
+                    </div>
+                    <div class="data-card">
+                        <h4>JS Engine</h4>
+                        <p>Procedural DB Generation</p>
+                    </div>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-tag">UI/UX Design</div>
+                    <div class="tech-tag">JavaScript Search API</div>
+                    <div class="tech-tag">Responsive Layouts</div>
+                </div>
             </div>
         </section>
 
         <!-- Video Editing -->
-        <section class="section">
-            <div class="content-block">
-                <span class="year-tag">MAR 2026 — JUL 2026</span>
-                <h1 class="massive-title">Editor<br><span>iFerg.</span></h1>
-                <p class="description">Executed high-retention post-production strategies for a top-tier global gaming creator. Optimized visual pacing, motion graphics, and audio mixing to strictly adhere to brand guidelines and maximize audience retention metrics.</p>
-            </div>
-        </section>
-
-        <!-- Mid-Level Roles -->
         <section class="section align-right">
-            <div class="content-block">
-                <span class="year-tag">2022 — 2025</span>
-                <h1 class="massive-title">Event<br><span>Manager.</span></h1>
-                <p class="description" style="margin-left: auto;">Scaled community engagement from 50,000 to 200,000 members. Designed live tournament mechanics, managed real-time coordination during traffic spikes, and established the foundational moderation infrastructure.</p>
+            <div class="glass-block">
+                <span class="year-tag">MAR 2026 — JUL 2026</span>
+                <h1 class="massive-title">Editor,<br><span>iFerg.</span></h1>
+                <p class="description">Executed high-retention video editing and pacing strategies for one of the largest mobile gaming creators in the world.</p>
+                
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-play" style="color: var(--indigo); margin-right: 10px;"></i> Optimized visual pacing and audio mixing to maximize audience retention graphs.</li>
+                    <li style="font-size: 14px; color: var(--text-muted);"><i class="fa-solid fa-play" style="color: var(--indigo); margin-right: 10px;"></i> Adapted editing style to strictly match established brand guidelines.</li>
+                </ul>
             </div>
         </section>
 
-        <!-- Footer / Contact -->
-        <section class="section" style="align-items: center; text-align: center; min-height: 70vh;">
-            <div class="content-block">
+        <!-- Contact Section -->
+        <section class="section" style="align-items: center; text-align: center;">
+            <div class="glass-block" style="display: flex; flex-direction: column; align-items: center;">
                 <h1 class="massive-title">Let's <span>Build.</span></h1>
-                <div class="links-row" style="justify-content: center;">
-                    <a href="mailto:manitruparell@gmail.com"><i class="fa-solid fa-paper-plane"></i> manitruparell@gmail.com</a>
-                </div>
+                <p class="description" style="margin-bottom: 30px;">Currently open to new opportunities in community architecture, front-end development, and post-production.</p>
+                <a href="mailto:manitruparell@gmail.com" class="contact-btn" style="font-size: 18px; padding: 18px 40px;"><i class="fa-solid fa-envelope"></i> manitruparell@gmail.com</a>
             </div>
         </section>
 
@@ -194,7 +239,8 @@
         // 1. Scene Setup
         const canvas = document.querySelector('#webgl-canvas');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2('#050505', 0.04);
+        // Bright, clean fog to blend objects into the white background
+        scene.fog = new THREE.FogExp2('#F8FAFC', 0.04);
 
         // 2. Camera Setup
         const sizes = { width: window.innerWidth, height: window.innerHeight };
@@ -206,56 +252,61 @@
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false });
         renderer.setSize(sizes.width, sizes.height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0xF8FAFC, 1); // Solid bright background
 
-        // 4. Lighting (Creating the cinematic gold/amber feel)
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        // 4. Lighting (Bright, fresh colors: Indigo & Coral)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
 
-        const pointLight1 = new THREE.PointLight(0xd4af37, 2, 20); // Gold Light
+        const pointLight1 = new THREE.PointLight(0x4B0082, 3, 20); // Indigo Light
         pointLight1.position.set(5, 5, 5);
         scene.add(pointLight1);
 
-        const pointLight2 = new THREE.PointLight(0xffffff, 1, 20); // White Fill
+        const pointLight2 = new THREE.PointLight(0xFF6F61, 3, 20); // Coral Light
         pointLight2.position.set(-5, -5, 2);
         scene.add(pointLight2);
 
-        // 5. 3D Objects (Low polygon count for i3 processor performance)
+        // 5. 3D Objects (Sleek, bright metallic geometry)
         const objects = [];
-        
-        // Materials
-        const materialSolid = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.8, roughness: 0.2 });
-        const materialWire = new THREE.MeshStandardMaterial({ color: 0xd4af37, wireframe: true, transparent: true, opacity: 0.3 });
+        const materialSolid = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.7, roughness: 0.1 });
+        const materialWire = new THREE.MeshStandardMaterial({ color: 0x4B0082, wireframe: true, transparent: true, opacity: 0.15 });
 
-        // Object 1: The Main Torus Knot (Hero Section)
-        const geo1 = new THREE.TorusKnotGeometry(1.5, 0.4, 64, 8);
+        // Hero Section Object
+        const geo1 = new THREE.TorusKnotGeometry(1.5, 0.5, 100, 16);
         const mesh1 = new THREE.Mesh(geo1, materialSolid);
-        mesh1.position.set(3, 0, -2);
+        mesh1.position.set(3.5, 0, -2);
         scene.add(mesh1);
         objects.push(mesh1);
 
-        // Object 2: Wireframe Icosahedron (Section 2)
-        const geo2 = new THREE.IcosahedronGeometry(2, 1);
+        // Server Section Object
+        const geo2 = new THREE.IcosahedronGeometry(2, 0);
         const mesh2 = new THREE.Mesh(geo2, materialWire);
-        mesh2.position.set(-3, -7, -4);
+        mesh2.position.set(-3.5, -7, -3);
         scene.add(mesh2);
         objects.push(mesh2);
+        
+        const geo2Inner = new THREE.IcosahedronGeometry(1.2, 0);
+        const mesh2Inner = new THREE.Mesh(geo2Inner, materialSolid);
+        mesh2Inner.position.set(-3.5, -7, -3);
+        scene.add(mesh2Inner);
 
-        // Object 3: Floating Rings (Section 3)
-        const geo3 = new THREE.TorusGeometry(2, 0.1, 16, 50);
+        // TrendTrade Section Object
+        const geo3 = new THREE.TorusGeometry(2, 0.4, 16, 50);
         const mesh3 = new THREE.Mesh(geo3, materialSolid);
-        mesh3.position.set(2, -14, -3);
+        mesh3.position.set(3, -14, -4);
         scene.add(mesh3);
         objects.push(mesh3);
 
-        const mesh4 = new THREE.Mesh(geo3, materialWire);
-        mesh4.position.set(2, -14, -3);
-        mesh4.rotation.x = Math.PI / 2;
+        // iFerg Section Object
+        const geo4 = new THREE.OctahedronGeometry(2, 0);
+        const mesh4 = new THREE.Mesh(geo4, materialWire);
+        mesh4.position.set(-3, -21, -3);
         scene.add(mesh4);
         objects.push(mesh4);
 
-        // 6. Floating Particles
+        // 6. Floating Ambient Particles (Coral & Indigo)
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 300; // Kept low for performance
+        const particlesCount = 200; 
         const posArray = new Float32Array(particlesCount * 3);
         
         for(let i = 0; i < particlesCount * 3; i++) {
@@ -263,13 +314,12 @@
         }
         
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({ size: 0.05, color: 0xd4af37, transparent: true, opacity: 0.4 });
+        const particlesMaterial = new THREE.PointsMaterial({ size: 0.08, color: 0xFF6F61, transparent: true, opacity: 0.6 });
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
         // 7. Scroll and Mouse Parallax Interaction
         let scrollY = window.scrollY;
-        let currentSection = 0;
         
         window.addEventListener('scroll', () => {
             scrollY = window.scrollY;
@@ -315,15 +365,17 @@
             mesh1.rotation.x = elapsedTime * 0.15;
             
             mesh2.rotation.y = elapsedTime * 0.1;
-            mesh2.rotation.z = elapsedTime * 0.1;
+            mesh2.rotation.x = elapsedTime * 0.1;
+            mesh2Inner.rotation.y = elapsedTime * -0.2;
 
             mesh3.rotation.x = elapsedTime * 0.2;
             mesh3.rotation.y = elapsedTime * 0.3;
-            mesh4.rotation.x = elapsedTime * 0.3 + Math.PI / 2;
-            mesh4.rotation.y = elapsedTime * 0.2;
+            
+            mesh4.rotation.z = elapsedTime * 0.2;
+            mesh4.rotation.x = elapsedTime * 0.2;
 
             // Slowly rotate particles
-            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.y = elapsedTime * 0.03;
 
             // Render
             renderer.render(scene, camera);
